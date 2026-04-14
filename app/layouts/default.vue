@@ -18,6 +18,7 @@
         </nav>
 
         <div class="nav-actions">
+            <UserSearch v-if="auth.isLoggedIn" />  <!-- ← 추가 -->
           <template v-if="auth.isLoggedIn">
             <span class="handle">@{{ auth.user?.handle }}</span>
             <button @click="auth.logout" class="btn-ghost">로그아웃</button>
