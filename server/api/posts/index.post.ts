@@ -1,5 +1,6 @@
 import { db } from '../../db'
-import { posts, channels, media } from '../../db/schema'
+import { deliverToFollowers } from '../../utils/federation'
+import { posts, channels, media, follows } from '../../db/schema'
 import { requireAuth } from '../../utils/auth'
 import { eq, sql, inArray } from 'drizzle-orm'
 import { z } from 'zod'
@@ -62,6 +63,38 @@ export default defineEventHandler(async (event) => {
   await db.update(posts)
     .set({ apId: `https://${domain}/posts/${post.id}` })
     .where(eq(posts.id, post.id))
+
+
+// 팔로워 inbox URL 목록 가져오기
+const followerList = await db.query.follows.findMany({
+  where: eq(follows.followingId, user.id),
+  with: { follower: { columns: { inboxUrl: true, isLocal: true } } },
+})
+
+const remoteFollowerInboxes = followerList
+  .filter(f => !f.follower.isLocal && f.follower.inboxUrl)
+  .map(f => f.follower.inboxUrl!)
+
+if (remoteFollowerInboxes.length > 0) {
+  const createActivity = {
+    '@context': 'https://www.w3.org/ns/activitystreams',
+    id:         `https://${domain}/posts/${post.id}#activity`,
+    type:       'Create',
+    actor:      `https://${domain}/users/${user.handle}`,
+    published:  post.createdAt,
+    to:         ['https://www.w3.org/ns/activitystreams#Public'],
+    object: {
+      id:           `https://${domain}/posts/${post.id}`,
+      type:         'Note',
+      content:      post.content,
+      published:    post.createdAt,
+      attributedTo: `https://${domain}/users/${user.handle}`,
+      to:           ['https://www.w3.org/ns/activitystreams#Public'],
+    },
+  }
+  // 비동기로 배달 (응답 기다리지 않음)
+  deliverToFollowers(createActivity, user.handle, remoteFollowerInboxes).catch(console.error)
+}
 
   return { ...post, apId: `https://${domain}/posts/${post.id}` }
 })

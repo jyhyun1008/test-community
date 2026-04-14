@@ -1,6 +1,7 @@
 import { db } from '../../db'
 import { follows, users } from '../../db/schema'
 import { requireAuth } from '../../utils/auth'
+import { deliverActivity } from '../../utils/federation'
 import { and, eq } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
@@ -20,6 +21,23 @@ export default defineEventHandler(async (event) => {
   if (existing) {
     // 언팔로우
     await db.delete(follows).where(eq(follows.id, existing.id))
+
+    // 원격 유저면 Undo Follow 전송
+    if (!target.isLocal && target.inboxUrl) {
+      const undoActivity = {
+        '@context': 'https://www.w3.org/ns/activitystreams',
+        id:         `${me.actorUrl}#undo-follow-${Date.now()}`,
+        type:       'Undo',
+        actor:      me.actorUrl,
+        object: {
+          type:   'Follow',
+          actor:  me.actorUrl,
+          object: target.actorUrl,
+        },
+      }
+      deliverActivity(undoActivity, me.handle, target.inboxUrl).catch(console.error)
+    }
+
     return { following: false }
   } else {
     // 팔로우
@@ -28,6 +46,18 @@ export default defineEventHandler(async (event) => {
       followingId: target.id,
       accepted:    !target.isLocked,
     })
+
+    // 원격 유저면 Follow 액티비티 전송
+    if (!target.isLocal && target.inboxUrl) {
+      const followActivity = {
+        '@context': 'https://www.w3.org/ns/activitystreams',
+        id:         `${me.actorUrl}#follow-${Date.now()}`,
+        type:       'Follow',
+        actor:      me.actorUrl,
+        object:     target.actorUrl,
+      }
+      deliverActivity(followActivity, me.handle, target.inboxUrl).catch(console.error)
+    }
     return { following: true }
   }
 })

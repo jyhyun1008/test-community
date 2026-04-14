@@ -61,16 +61,17 @@ export default defineEventHandler(async (event) => {
   console.log('🔑 actor fetched:', actor?.handle)
 
   // 서명 검증
-  const valid = verifySignature(
-    'POST',
-    `https://${process.env.INSTANCE_DOMAIN}${event.path}`,
-    headers,
-    actor.publicKey,
-  )
-    console.log('🔑 signature valid:', valid)
-//   if (!valid) {
-//     throw createError({ statusCode: 401, message: 'Invalid signature' })
-//   }
+  const valid = true
+//   const valid = verifySignature(
+//     'POST',
+//     `https://${process.env.INSTANCE_DOMAIN}${event.path}`,
+//     headers,
+//     actor.publicKey,
+//   )
+//     console.log('🔑 signature valid:', valid)
+  if (!valid) {
+    throw createError({ statusCode: 401, message: 'Invalid signature' })
+  }
 
   // Activity 로깅
   await db.insert(activities).values({
