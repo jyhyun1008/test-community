@@ -25,9 +25,9 @@ const { data: stats } = await useFetch('/api/admin/stats', { headers })
 </script>
 
 <style scoped>
-h1          { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
+h1          { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-primary); }
 .stats      { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-.stat-card  { background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1.5rem; text-align: center; }
+.stat-card  { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; text-align: center; }
 .stat-value { font-size: 2rem; font-weight: 700; color: var(--accent); }
-.stat-label { font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem; }
+.stat-label { font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem; }
 </style>

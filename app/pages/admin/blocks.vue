@@ -28,7 +28,7 @@
             </td>
           </tr>
           <tr v-if="!blocks?.length">
-            <td colspan="4" style="text-align:center;color:#9ca3af">블락된 인스턴스 없음</td>
+            <td colspan="4" style="text-align:center" class="empty-row">블락된 인스턴스 없음</td>
           </tr>
         </tbody>
       </table>
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'admin',
-  middleware: 'admin',  // ← 추가
+  middleware: 'admin',
 })
 
 const { data: blocks, refresh } = await useFetch('/api/admin/blocks')
@@ -61,14 +61,15 @@ async function removeBlock(id: string) {
 
 <style scoped>
 .page-header  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-h1            { font-size: 1.5rem; font-weight: 700; margin: 0; }
-.form-card    { background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+h1            { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--text-primary); }
+.form-card    { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
 .field-row    { display: flex; gap: 0.5rem; }
-input         { padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 0.9rem; }
-.table-wrap   { background: white; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+input         { padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; background: var(--bg-surface); color: var(--text-primary); outline: none; }
+.table-wrap   { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
 table         { width: 100%; border-collapse: collapse; }
-th            { text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; color: #6b7280; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
-td            { padding: 0.75rem 1rem; font-size: 0.875rem; border-bottom: 1px solid #f4f4f4; }
+th            { text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--text-muted); border-bottom: 1px solid var(--border); background: var(--bg-subtle); }
+td            { padding: 0.75rem 1rem; font-size: 0.875rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
+.empty-row    { color: var(--text-placeholder); }
 .btn-primary  { padding: 0.5rem 1rem; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem; white-space: nowrap; }
 .btn-danger-sm { padding: 0.25rem 0.5rem; background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
 </style>

@@ -8,7 +8,9 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "check": "docker compose -f docker-compose.prod.yml down && docker compose -f docker-compose.prod.yml up -d --build",
     "deploy": "git pull && docker compose -f docker-compose.prod.yml down && docker compose -f docker-compose.prod.yml up -d --build",
+    "first-deploy": "docker compose -f docker-compose.prod.yml up -d --build",
     "db:seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
@@ -16,6 +18,7 @@
     "@aws-sdk/s3-request-presigner": "^3.1030.0",
     "@peertube/http-signature": "^1.7.0",
     "@pinia/nuxt": "^0.11.3",
+    "@tabler/icons-vue": "^3.41.1",
     "@vueuse/core": "^14.2.1",
     "bcryptjs": "^3.0.3",
     "bullmq": "^5.73.5",

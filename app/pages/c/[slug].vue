@@ -36,9 +36,9 @@ const { data: posts, pending, refresh } = await useFetch('/api/posts', {
 
 <style scoped>
 .channel-header { margin-bottom: 1.25rem; }
-h1   { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.25rem; }
-.desc { color: #6b7280; margin: 0; }
-.loading { text-align: center; padding: 3rem; color: #9ca3af; }
-.empty   { text-align: center; padding: 3rem; color: #9ca3af; }
+h1   { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.25rem; color: var(--text-primary); }
+.desc { color: var(--text-muted); margin: 0; }
+.loading { text-align: center; padding: 3rem; color: var(--text-placeholder); }
+.empty   { text-align: center; padding: 3rem; color: var(--text-placeholder); }
 .feed    { display: flex; flex-direction: column; gap: 0.75rem; }
 </style>

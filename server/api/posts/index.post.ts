@@ -1,8 +1,8 @@
 import { db } from '../../db'
 import { deliverToFollowers } from '../../utils/federation'
-import { posts, channels, media, follows } from '../../db/schema'
+import { posts, channels, media, follows, customEmojis } from '../../db/schema'
 import { requireAuth } from '../../utils/auth'
-import { eq, sql, inArray } from 'drizzle-orm'
+import { eq, sql, inArray, isNull } from 'drizzle-orm'
 import { z } from 'zod'
 import { renderMarkdown } from '../../utils/markdown'
 
@@ -32,12 +32,16 @@ export default defineEventHandler(async (event) => {
     channelId = channel.id
   }
 
+  // 로컬 커스텀 이모지 로드
+  const emojiRows = await db.select().from(customEmojis).where(isNull(customEmojis.domain))
+  const emojiMap = Object.fromEntries(emojiRows.map(e => [e.shortcode, e.url]))
+
   const [post] = await db.insert(posts).values({
     authorId:    user.id,
     channelId,
     title:       body.title,
     content:     body.content,
-    contentHtml: renderMarkdown(body.content),
+    contentHtml: renderMarkdown(body.content, emojiMap),
     visibility:  body.visibility,
     replyToId:   body.replyToId,
     isSensitive: body.sensitive,
@@ -76,8 +80,20 @@ const remoteFollowerInboxes = followerList
   .map(f => f.follower.inboxUrl!)
 
 if (remoteFollowerInboxes.length > 0) {
+  // 본문에서 커스텀 이모지 태그 추출
+  const emojiTags = Object.entries(emojiMap)
+    .filter(([sc]) => post.content.includes(`:${sc}:`))
+    .map(([sc, url]) => ({
+      type: 'Emoji',
+      name: `:${sc}:`,
+      icon: { type: 'Image', url },
+    }))
+
   const createActivity = {
-    '@context': 'https://www.w3.org/ns/activitystreams',
+    '@context': [
+      'https://www.w3.org/ns/activitystreams',
+      { toot: 'http://joinmastodon.org/ns#', Emoji: 'toot:Emoji' },
+    ],
     id:         `https://${domain}/posts/${post.id}#activity`,
     type:       'Create',
     actor:      `https://${domain}/users/${user.handle}`,
@@ -86,10 +102,11 @@ if (remoteFollowerInboxes.length > 0) {
     object: {
       id:           `https://${domain}/posts/${post.id}`,
       type:         'Note',
-      content:      post.content,
+      content:      post.contentHtml ?? post.content,
       published:    post.createdAt,
       attributedTo: `https://${domain}/users/${user.handle}`,
       to:           ['https://www.w3.org/ns/activitystreams#Public'],
+      tag:          emojiTags.length > 0 ? emojiTags : undefined,
     },
   }
   // 비동기로 배달 (응답 기다리지 않음)

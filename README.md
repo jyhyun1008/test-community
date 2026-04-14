@@ -1,75 +1,81 @@
-# Nuxt Minimal Starter
+## 설치과정 정리
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+### 0. node js, docker 등 설치
 
-## Setup
+리눅스 기준
 
-Make sure to install dependencies:
+```
+# 패키지 업데이트
+apt update && apt upgrade -y
 
-```bash
-# npm
-npm install
+# 필수 패키지 설치
+apt install -y curl git nginx certbot python3-certbot-nginx ufw
 
-# pnpm
-pnpm install
+# Node.js 22 설치
+curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+apt install -y nodejs
 
-# yarn
-yarn install
+# PM2 설치
+npm install -g pm2
 
-# bun
-bun install
+# 방화벽 설정
+ufw allow OpenSSH
+ufw allow 'Nginx Full'
+ufw enable
+
+# 버전 확인
+node -v
+npm -v
+nginx -v
 ```
 
-## Development Server
+```
+# Docker 설치
+curl -fsSL https://get.docker.com | bash
 
-Start the development server on `http://localhost:3000`:
+# Docker Compose 설치
+apt install -y docker-compose-plugin
 
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+# 확인
+docker --version
+docker compose version
 ```
 
-## Production
+### 1. env, instance.ts 파일 편집
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+```
+cp env.example .env
+cp config/instance.example.ts config/instance.ts
 ```
 
-Locally preview production build:
+### 2. 필요한 모듈 설치
 
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+```
+npm i
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+### 3. deploy
+
+초기 deploy
+```
+npm run first-deploy
+```
+
+업데이트 시
+```
+npm run deploy
+```
+
+### 4. 회원가입후 자기자신을 admin으로 만들기
+
+```
+http://localhost:3000/
+```
+
+접속 후 회원가입.
+
+```
+docker compose -f docker-compose.prod.yml exec postgres psql -U fedi -d fediverse -c "UPDATE users SET role='admin' WHERE handle='your_handle';"
+```
+
+`your_handle` 자리에 가입한 핸들 넣고 명령어 실행.

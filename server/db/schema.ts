@@ -2,7 +2,7 @@ import {
   pgTable, uniqueIndex, uuid, text, boolean, timestamp,
   integer, jsonb, pgEnum, index
 } from 'drizzle-orm/pg-core'
-
+import { sql } from 'drizzle-orm';
 import { relations } from 'drizzle-orm'
 
 // ─── Enums ───────────────────────────────────────────────
@@ -150,6 +150,20 @@ export const activities = pgTable('activities', {
 }, t => [
   index('activities_actor_idx').on(t.actorId),
   index('activities_processed_idx').on(t.processed),
+])
+
+// ─── Custom Emojis ───────────────────────────────────────
+
+export const customEmojis = pgTable('custom_emojis', {
+  id:              uuid('id').primaryKey().defaultRandom(),
+  shortcode:       text('shortcode').notNull(),       // blobcat (콜론 없이)
+  url:             text('url').notNull(),              // 이미지 full URL
+  domain:          text('domain'),                    // null = 로컬, 'mastodon.social' = 리모트
+  visibleInPicker: boolean('visible_in_picker').notNull().default(true),
+  createdAt:       timestamp('created_at').defaultNow(),
+}, t => [
+  // 로컬 이모지(domain IS NULL)의 shortcode 중복 방지
+  uniqueIndex('custom_emojis_local_unique').on(t.shortcode).where(sql`${t.domain} IS NULL`),
 ])
 
 // ─── Instance Blocks ─────────────────────────────────────

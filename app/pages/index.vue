@@ -24,7 +24,7 @@ const { data: posts, pending, refresh } = await useFetch('/api/posts')
 </script>
 
 <style scoped>
-.loading { text-align: center; padding: 3rem; color: #9ca3af; }
-.empty   { text-align: center; padding: 3rem; color: #9ca3af; }
+.loading { text-align: center; padding: 3rem; color: var(--text-placeholder); }
+.empty   { text-align: center; padding: 3rem; color: var(--text-placeholder); }
 .feed    { display: flex; flex-direction: column; gap: 0.75rem; }
 </style>

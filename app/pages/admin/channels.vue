@@ -49,8 +49,8 @@
             <td><code>#{{ ch.slug }}</code></td>
             <td>{{ ch.name }}</td>
             <td>{{ ch.description ?? '-' }}</td>
-            <td>{{ ch.isNsfw ? '✅' : '-' }}</td>
-            <td>{{ ch.isArchived ? '✅' : '-' }}</td>
+            <td><IconCheck v-if="ch.isNsfw" :size="15" class="check-icon" /><span v-else>-</span></td>
+            <td><IconCheck v-if="ch.isArchived" :size="15" class="check-icon" /><span v-else>-</span></td>
             <td>{{ ch.sortOrder }}</td>
             <td>
               <button class="btn-danger-sm" @click="deleteChannel(ch.id)">삭제</button>
@@ -63,9 +63,10 @@
 </template>
 
 <script setup lang="ts">
+import { IconCheck } from '@tabler/icons-vue'
 definePageMeta({
   layout: 'admin',
-  middleware: 'admin',  // ← 추가
+  middleware: 'admin',
 })
 
 const { data: channels, refresh } = await useFetch('/api/channels')
@@ -90,19 +91,20 @@ async function deleteChannel(id: string) {
 
 <style scoped>
 .page-header  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-h1            { font-size: 1.5rem; font-weight: 700; margin: 0; }
-.form-card    { background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; }
-h2            { font-size: 1rem; font-weight: 600; margin: 0 0 1rem; }
+h1            { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--text-primary); }
+.form-card    { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; }
+h2            { font-size: 1rem; font-weight: 600; margin: 0 0 1rem; color: var(--text-primary); }
 .field        { margin-bottom: 0.75rem; }
 .field-row    { display: flex; gap: 1.5rem; margin-bottom: 0.75rem; }
-label         { display: block; font-size: 0.875rem; margin-bottom: 0.25rem; color: #374151; }
-input         { width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 0.9rem; box-sizing: border-box; }
+label         { display: block; font-size: 0.875rem; margin-bottom: 0.25rem; color: var(--text-secondary); }
+input         { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; box-sizing: border-box; background: var(--bg-surface); color: var(--text-primary); }
 .form-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem; }
-.table-wrap   { background: white; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+.table-wrap   { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
 table         { width: 100%; border-collapse: collapse; }
-th            { text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; color: #6b7280; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
-td            { padding: 0.75rem 1rem; font-size: 0.875rem; border-bottom: 1px solid #f4f4f4; }
+th            { text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--text-muted); border-bottom: 1px solid var(--border); background: var(--bg-subtle); }
+td            { padding: 0.75rem 1rem; font-size: 0.875rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
 .btn-primary  { padding: 0.5rem 1rem; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem; }
-.btn-ghost    { padding: 0.5rem 1rem; border: 1px solid #e5e7eb; background: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem; }
+.btn-ghost    { padding: 0.5rem 1rem; border: 1px solid var(--border); background: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem; color: var(--text-primary); }
 .btn-danger-sm { padding: 0.25rem 0.5rem; background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+.check-icon    { color: #10b981; display: block; }
 </style>

@@ -1,4 +1,3 @@
-// app/plugins/theme.client.ts  ← 파일명에 .client 추가
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
   const accentColor = config.public.accentColor as string
@@ -6,4 +5,7 @@ export default defineNuxtPlugin(() => {
   if (accentColor) {
     document.documentElement.style.setProperty('--accent', accentColor)
   }
+
+  const { init } = useTheme()
+  init()
 })

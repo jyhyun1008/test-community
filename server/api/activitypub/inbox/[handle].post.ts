@@ -1,5 +1,5 @@
 import { db } from '../../../db'
-import { users, activities, posts, follows } from '../../../db/schema'
+import { users, activities, posts, follows, customEmojis } from '../../../db/schema'
 import { verifySignature } from '../../../utils/httpSignature'
 import { eq, and } from 'drizzle-orm'
 import { deliverActivity } from '../../../utils/federation'
@@ -146,11 +146,53 @@ async function processActivity(activity: any, actorId?: string) {
     case 'Create': {
       if (activity.object?.type === 'Note') {
         const note = activity.object
+
+        // 리모트 커스텀 이모지 처리
+        const tags: any[] = Array.isArray(note.tag) ? note.tag : []
+        const emojiTags = tags.filter((t: any) => t.type === 'Emoji' && t.name && t.icon?.url)
+
+        // 리모트 이모지 upsert (domain 기준)
+        let contentHtml = note.content ?? ''
+        if (emojiTags.length > 0) {
+          const actorDomain = note.attributedTo
+            ? new URL(note.attributedTo).hostname
+            : new URL(note.id).hostname
+
+          const emojiMap: Record<string, string> = {}
+          for (const tag of emojiTags) {
+            // name은 ":shortcode:" 형식
+            const shortcode = tag.name.replace(/^:|:$/g, '')
+            const url = tag.icon.url
+            emojiMap[shortcode] = url
+            // 이미 있으면 URL 업데이트, 없으면 삽입
+            const existing = await db.query.customEmojis.findFirst({
+              where: and(eq(customEmojis.shortcode, shortcode), eq(customEmojis.domain, actorDomain)),
+            })
+            if (existing) {
+              await db.update(customEmojis).set({ url }).where(eq(customEmojis.id, existing.id))
+            } else {
+              await db.insert(customEmojis).values({
+                shortcode,
+                url,
+                domain:          actorDomain,
+                visibleInPicker: false,  // 리모트 이모지는 피커에 표시 안함
+              }).onConflictDoNothing()
+            }
+          }
+
+          // `:shortcode:` → <img> 치환 (pre/code 블록 스킵)
+          contentHtml = contentHtml.replace(/:([a-zA-Z0-9_]+):/g, (match: string, sc: string) => {
+            const u = emojiMap[sc]
+            if (!u) return match
+            return `<img class="custom-emoji" src="${u}" alt=":${sc}:" title=":${sc}:" loading="lazy" />`
+          })
+        }
+
         await db.insert(posts).values({
           apId:        note.id,
           authorId:    actorId,
-          content:     note.content,
-          contentHtml: note.content,
+          content:     note.content ?? '',
+          contentHtml,
           visibility:  'public',
           isLocal:     false,
         }).onConflictDoNothing()

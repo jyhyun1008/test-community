@@ -61,7 +61,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'admin',
-  middleware: 'admin',  // ← 추가
+  middleware: 'admin',
 })
 
 const search = ref('')
@@ -87,14 +87,14 @@ async function deleteUser(id: string, handle: string) {
 </script>
 
 <style scoped>
-h1            { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
-.search-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; box-sizing: border-box; }
-.table-wrap   { background: white; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+h1            { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-primary); }
+.search-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 1rem; font-size: 0.9rem; box-sizing: border-box; background: var(--bg-surface); color: var(--text-primary); outline: none; }
+.table-wrap   { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
 table         { width: 100%; border-collapse: collapse; }
-th            { text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; color: #6b7280; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
-td            { padding: 0.75rem 1rem; font-size: 0.875rem; border-bottom: 1px solid #f4f4f4; }
-select        { padding: 0.25rem; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 0.875rem; }
+th            { text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--text-muted); border-bottom: 1px solid var(--border); background: var(--bg-subtle); }
+td            { padding: 0.75rem 1rem; font-size: 0.875rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
+select        { padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px; font-size: 0.875rem; background: var(--bg-surface); color: var(--text-primary); }
 .btn-danger-sm  { padding: 0.25rem 0.5rem; background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
 .btn-warning-sm { padding: 0.25rem 0.5rem; background: #fef3c7; color: #d97706; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-.btn-ghost-sm   { padding: 0.25rem 0.5rem; border: 1px solid #e5e7eb; border-radius: 4px; text-decoration: none; color: #374151; font-size: 0.8rem; }
+.btn-ghost-sm   { padding: 0.25rem 0.5rem; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--text-secondary); font-size: 0.8rem; }
 </style>

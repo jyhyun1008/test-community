@@ -1,28 +1,30 @@
 <template>
   <div>
-    <button class="back-btn" @click="$router.back()">← 뒤로</button>
+    <button class="back-btn" @click="$router.back()">
+      <IconArrowLeft :size="16" /> 뒤로
+    </button>
 
     <div v-if="pending" class="loading">불러오는 중...</div>
 
     <div v-else-if="post" class="post-detail">
       <div class="post-header">
         <NuxtLink v-if="post.author" :to="post.author.isLocal
-    ? `/@${post.author.handle}`
-    : `/@${post.author.handle}@${post.author.domain}`" class="author">
-        <div class="avatar-wrap">
+          ? `/@${post.author.handle}`
+          : `/@${post.author.handle}@${post.author.domain}`" class="author">
+          <div class="avatar-wrap">
             <img v-if="post.author?.avatarUrl" :src="post.author.avatarUrl" class="avatar" />
             <div v-else class="avatar-placeholder">
-            {{ post.author ? post.author.handle[0].toUpperCase() : '?' }}
+              {{ post.author ? post.author.handle[0].toUpperCase() : '?' }}
             </div>
-        </div>
-        <div>
+          </div>
+          <div>
             <div class="display-name">
-            {{ post.author?.displayName ?? post.author?.handle ?? '삭제된 사용자' }}
+              {{ post.author?.displayName ?? post.author?.handle ?? '삭제된 사용자' }}
             </div>
             <div class="handle">
-            {{ post.author ? `@${post.author.handle}${post.author.isLocal ? '' : `@${post.author.domain}`}` : '' }}
+              {{ post.author ? `@${post.author.handle}${post.author.isLocal ? '' : `@${post.author.domain}`}` : '' }}
             </div>
-        </div>
+          </div>
         </NuxtLink>
         <span v-else class="deleted-author">삭제된 사용자</span>
 
@@ -37,36 +39,37 @@
       <h1 v-if="post.title" class="post-title">{{ post.title }}</h1>
       <div class="post-content md-content" v-html="post.contentHtml ?? post.content" />
 
-
-    <div v-if="post.media?.length" class="media-grid" :class="`count-${post.media.length}`">
+      <div v-if="post.media?.length" class="media-grid" :class="`count-${post.media.length}`">
         <img
-            v-for="m in post.media"
-            :key="m.id"
-            :src="`https://${m.url}`"
-            :alt="m.altText ?? ''"
-            class="media-img"
+          v-for="m in post.media"
+          :key="m.id"
+          :src="`https://${m.url}`"
+          :alt="m.altText ?? ''"
+          class="media-img"
         />
-    </div>
-        <div class="post-actions">
-        <button class="action-btn">💬 {{ post.replyCount }}</button>
-        <button class="action-btn">🔁 {{ post.repostCount }}</button>
-        <button
-            class="action-btn"
-            :class="{ active: liked }"
-            @click="toggleLike"
-        >
-            {{ liked ? '❤️' : '🤍' }} {{ likeCount }}
-        </button>
-        <button
-            v-if="post.author && auth.user?.id === post.author.id"
-            class="action-btn danger"
-            @click="deletePost"
-        >
-            🗑️ 삭제
-        </button>
-        </div>
+      </div>
 
-      <!-- 답글 작성 -->
+      <div class="post-actions">
+        <button class="action-btn">
+          <IconMessage :size="16" /> {{ post.replyCount }}
+        </button>
+        <button class="action-btn">
+          <IconRepeat :size="16" /> {{ post.repostCount }}
+        </button>
+        <button class="action-btn" :class="{ active: liked }" @click="toggleLike">
+          <IconHeartFilled v-if="liked" :size="16" />
+          <IconHeart v-else :size="16" />
+          {{ likeCount }}
+        </button>
+        <button
+          v-if="post.author && auth.user?.id === post.author.id"
+          class="action-btn danger"
+          @click="deletePost"
+        >
+          <IconTrash :size="16" /> 삭제
+        </button>
+      </div>
+
       <div v-if="auth.isLoggedIn && post.author" class="reply-composer">
         <textarea
           v-model="replyContent"
@@ -74,28 +77,20 @@
           rows="2"
           class="reply-input"
         />
-        <button
-          class="btn-primary"
-          :disabled="!replyContent.trim()"
-          @click="submitReply"
-        >
+        <button class="btn-primary" :disabled="!replyContent.trim()" @click="submitReply">
           답글
         </button>
       </div>
 
-      <!-- 답글 목록 -->
       <div class="replies">
-        <PostCard
-          v-for="reply in replies"
-          :key="reply.id"
-          :post="reply"
-        />
+        <PostCard v-for="reply in replies" :key="reply.id" :post="reply" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { IconArrowLeft, IconMessage, IconRepeat, IconHeart, IconHeartFilled, IconTrash } from '@tabler/icons-vue'
 import { useAuthStore } from '~/stores/auth'
 
 definePageMeta({ layout: 'default' })
@@ -110,7 +105,6 @@ const { data: replies, refresh: refreshReplies } = await useFetch('/api/posts', 
 })
 
 const replyContent = ref('')
-
 const liked     = ref(post.value?.isLiked ?? false)
 const likeCount = ref(post.value?.likeCount ?? 0)
 
@@ -146,31 +140,33 @@ async function deletePost() {
 </script>
 
 <style scoped>
-.back-btn       { background: none; border: none; cursor: pointer; color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem; padding: 0; }
-.back-btn:hover { color: #111827; }
-.loading        { text-align: center; padding: 3rem; color: #9ca3af; }
-.post-detail    { background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1.5rem; }
+.back-btn       { display: flex; align-items: center; gap: 0.3rem; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; padding: 0; font-family: inherit; }
+.back-btn:hover { color: var(--text-primary); }
+.loading        { text-align: center; padding: 3rem; color: var(--text-placeholder); }
+.post-detail    { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
 .post-header    { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
 .author         { display: flex; gap: 0.75rem; text-decoration: none; color: inherit; }
 .avatar         { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
 .avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 600; }
-.display-name   { font-weight: 600; }
-.handle         { font-size: 0.85rem; color: #9ca3af; }
+.display-name   { font-weight: 600; color: var(--text-primary); }
+.handle         { font-size: 0.85rem; color: var(--text-placeholder); }
 .post-info      { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; }
-.channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: #ede9fe; color: var(--accent); border-radius: 9999px; text-decoration: none; }
-.date           { font-size: 0.8rem; color: #9ca3af; }
-.post-title     { font-size: 1.4rem; font-weight: 700; margin: 0 0 0.75rem; }
-.post-content   { font-size: 0.95rem; line-height: 1.7; color: #374151; white-space: pre-wrap; margin: 0;  max-height: none;  -webkit-mask-image: none; mask-image: none;}
-.post-actions   { display: flex; gap: 1rem; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid #f4f4f4; }
-.action-btn     { background: none; border: none; cursor: pointer; font-size: 0.875rem; color: #6b7280; padding: 0.25rem 0.5rem; border-radius: 6px; }
-.action-btn:hover { background: #f4f4f4; }
-.action-btn.danger:hover { background: #fee2e2; color: #ef4444; }
+.channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--badge-bg); color: var(--badge-color); border-radius: 9999px; text-decoration: none; }
+.date           { font-size: 0.8rem; color: var(--text-placeholder); }
+.post-title     { font-size: 1.4rem; font-weight: 700; margin: 0 0 0.75rem; color: var(--text-primary); }
+.post-content   { font-size: 0.95rem; line-height: 1.7; color: var(--text-secondary); white-space: pre-wrap; margin: 0; max-height: none; -webkit-mask-image: none; mask-image: none; }
+.post-actions   { display: flex; gap: 0.5rem; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border-subtle); }
+.action-btn     { display: flex; align-items: center; gap: 0.3rem; background: none; border: none; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 6px; font-family: inherit; }
+.action-btn:hover { background: var(--bg-hover); }
+.action-btn.active { color: #ef4444; }
+.action-btn.danger:hover { color: #ef4444; }
 .reply-composer { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
-.reply-input    { width: 100%; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.625rem; font-size: 0.9rem; font-family: inherit; resize: vertical; outline: none; box-sizing: border-box; }
+.reply-input    { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.625rem; font-size: 0.9rem; font-family: inherit; resize: vertical; outline: none; box-sizing: border-box; background: var(--bg-surface); color: var(--text-primary); }
+.reply-input::placeholder { color: var(--text-placeholder); }
 .btn-primary    { align-self: flex-end; padding: 0.375rem 1rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 0.875rem; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .replies        { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
-.deleted-author { font-size: 0.875rem; color: #9ca3af; font-style: italic; }
+.deleted-author { font-size: 0.875rem; color: var(--text-placeholder); font-style: italic; }
 .media-grid          { display: grid; gap: 4px; margin: 1rem 0; border-radius: 10px; overflow: hidden; }
 .media-grid.count-1  { grid-template-columns: 1fr; }
 .media-grid.count-2  { grid-template-columns: 1fr 1fr; }
