@@ -16,7 +16,10 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, message: 'User not found' })
   }
 
-  const body = await readBody(event)
+    console.log('📬 inbox hit:', getRouterParam(event, 'handle'))
+    const body = await readBody(event)
+    console.log('📬 inbox body:', JSON.stringify(body).slice(0, 200))
+
   const headers = Object.fromEntries(
     Object.entries(getHeaders(event)).map(([k, v]) => [k.toLowerCase(), v as string])
   )
