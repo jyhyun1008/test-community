@@ -80,13 +80,15 @@ async function uploadFile(file: File): Promise<string> {
 async function uploadAvatar(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
-  form.avatarUrl = await uploadFile(file)
+  var au = await uploadFile(file)
+  form.avatarUrl = 'https://'+au
 }
 
 async function uploadHeader(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
-  form.headerUrl = await uploadFile(file)
+  var hu = await uploadFile(file)
+  form.headerUrl = 'https://'+hu
 }
 
 async function save() {
