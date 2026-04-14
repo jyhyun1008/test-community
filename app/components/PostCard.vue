@@ -2,7 +2,10 @@
   <div class="post-card">
     <div class="post-meta">
   <!-- author가 있을 때만 표시 -->
-  <NuxtLink v-if="post.author" :to="`/@${post.author.handle}`" class="author">
+  <NuxtLink v-if="post.author" :to="post.author.isLocal
+    ? `/@${post.author.handle}`
+    : `/@${post.author.handle}@${post.author.domain}`"
+    class="author">
     <img
       v-if="post.author.avatarUrl"
       :src="post.author.avatarUrl"

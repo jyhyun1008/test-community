@@ -1,5 +1,5 @@
 import {
-  pgTable, uuid, text, boolean, timestamp,
+  pgTable, uniqueIndex, uuid, text, boolean, timestamp,
   integer, jsonb, pgEnum, index
 } from 'drizzle-orm/pg-core'
 
@@ -46,7 +46,7 @@ export const users = pgTable('users', {
   createdAt:   timestamp('created_at').defaultNow(),
   updatedAt:   timestamp('updated_at').defaultNow(),
 }, t => [
-  index('users_handle_domain_idx').on(t.handle, t.domain),
+  uniqueIndex('users_handle_domain_unique').on(t.handle, t.domain),  // unique로 변경
 ])
 
 // ─── Channels ────────────────────────────────────────────

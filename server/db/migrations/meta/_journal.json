@@ -8,6 +8,13 @@
       "when": 1776118726290,
       "tag": "0000_hard_major_mapleleaf",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776146710718,
+      "tag": "0001_flaky_marvel_apes",
+      "breakpoints": true
     }
   ]
 }

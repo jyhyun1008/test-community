@@ -6,7 +6,9 @@
 
     <div v-else-if="post" class="post-detail">
       <div class="post-header">
-        <NuxtLink v-if="post.author" :to="post.author ? `/@${post.author.handle}` : '#'" class="author">
+        <NuxtLink v-if="post.author" :to="post.author.isLocal
+    ? `/@${post.author.handle}`
+    : `/@${post.author.handle}@${post.author.domain}`" class="author">
         <div class="avatar-wrap">
             <img v-if="post.author?.avatarUrl" :src="post.author.avatarUrl" class="avatar" />
             <div v-else class="avatar-placeholder">
