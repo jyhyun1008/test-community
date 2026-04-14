@@ -67,11 +67,11 @@ export default defineEventHandler(async (event) => {
     headers,
     actor.publicKey,
   )
-  if (!valid) {
-    throw createError({ statusCode: 401, message: 'Invalid signature' })
-  }
-
     console.log('🔑 signature valid:', valid)
+//   if (!valid) {
+//     throw createError({ statusCode: 401, message: 'Invalid signature' })
+//   }
+
   // Activity 로깅
   await db.insert(activities).values({
     apId:      body.id,

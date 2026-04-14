@@ -36,7 +36,9 @@ export function verifySignature(
   publicKey: string,
 ): boolean {
   try {
+    console.log('🔐 verifying signature...')
     const signatureHeader = headers['signature']
+    console.log('🔐 signature header:', signatureHeader?.slice(0, 100))
     if (!signatureHeader) return false
 
     const parts = Object.fromEntries(
@@ -51,13 +53,17 @@ export function verifySignature(
 
     const signingString = headerNames.map(h => {
       if (h === '(request-target)') return `(request-target): ${method.toLowerCase()} ${urlObj.pathname}`
-      return `${h}: ${headers[h]}`
+      return `${h}: ${headers[h] ?? ''}`
     }).join('\n')
 
-    return createVerify('sha256')
+    var result = createVerify('sha256')
       .update(signingString)
       .verify(publicKey, parts.signature, 'base64')
+
+    console.log('🔐 verification result:', result)
+    return result
   } catch {
+    console.log('🔐 verify error:', e)
     return false
   }
 }
