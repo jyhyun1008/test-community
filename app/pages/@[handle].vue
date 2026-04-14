@@ -53,22 +53,32 @@ const handle = route.params.handle as string
 
 // URL에서 @ 제거하고 @domain 있으면 lookup, 없으면 로컬
 const isRemote = handle.includes('@')
-const acct     = isRemote ? handle : null
+const handlePart = isRemote ? handle.split('@')[0] : handle
+const domainPart = isRemote ? handle.split('@')[1] : null
 
-const { data: user2, pending } = await useFetch(
+const { data: user, pending } = await useFetch(
   isRemote
     ? `/api/users/lookup?acct=${handle}`
     : `/api/users/${handle}`
 )
 
-const { data: user }                       = await useFetch(`/api/users/${handle}`)
-const { data: posts, refresh: refreshPosts } = await useFetch('/api/posts', { query: { author: handle } })
-const { data: followStatus }               = await useFetch(`/api/users/${handle}/follow-status`)
+const { data: posts, refresh: refreshPosts } = await useFetch('/api/posts', {
+  query: isRemote
+    ? { author: handlePart, domain: domainPart }
+    : { author: handle },
+})
 
+const { data: followStatus } = await useFetch(
+  isRemote
+    ? `/api/users/${handlePart}@${domainPart}/follow-status`
+    : `/api/users/${handle}/follow-status`
+)
 const isFollowing = ref(followStatus.value?.following ?? false)
 
 async function toggleFollow() {
-  const res = await $fetch(`/api/follows/${handle}`, { method: 'POST' })
+  if (!auth.isLoggedIn) return navigateTo('/auth/login')
+  const followHandle = isRemote ? `${handlePart}@${domainPart}` : handle
+  const res = await $fetch(`/api/follows/${followHandle}`, { method: 'POST' })
   isFollowing.value = res.following
   if (user.value) {
     user.value.followerCount += res.following ? 1 : -1
