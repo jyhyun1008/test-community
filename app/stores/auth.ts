@@ -5,6 +5,7 @@ interface User {
   handle: string
   displayName: string | null
   avatarUrl: string | null
+  headerUrl: string | null
   bio: string | null
   role: string
 }

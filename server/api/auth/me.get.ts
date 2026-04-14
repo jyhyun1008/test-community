@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     where: eq(users.id, payload.userId),
     columns: {
       id: true, handle: true, displayName: true,
-      avatarUrl: true, bio: true, role: true, createdAt: true,
+      avatarUrl: true, headerUrl: true, bio: true, role: true, createdAt: true,
     },
   })
 

@@ -59,7 +59,7 @@ const form = reactive({
   displayName: auth.user?.displayName ?? '',
   bio:         auth.user?.bio ?? '',
   avatarUrl:   auth.user?.avatarUrl ?? '',
-  headerUrl:   '',
+  headerUrl:   auth.user?.headerUrl ?? '',
 })
 
 // 현재 유저 정보 불러오기
@@ -68,6 +68,7 @@ if (me.value) {
   form.displayName = me.value.displayName ?? ''
   form.bio         = me.value.bio ?? ''
   form.avatarUrl   = me.value.avatarUrl ?? ''
+  form.headerUrl   = me.value.headerUrl ?? ''
 }
 
 async function uploadFile(file: File): Promise<string> {
