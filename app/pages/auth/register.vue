@@ -72,7 +72,7 @@ input        { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e5e7eb; 
 .input-prefix span  { padding: 0.5rem 0.75rem; background: #f9fafb; color: #6b7280; font-size: 0.9rem; }
 .input-prefix input { border: none; flex: 1; }
 .error       { color: #ef4444; font-size: 0.875rem; margin-bottom: 0.75rem; }
-.btn-primary { width: 100%; padding: 0.625rem; background: #6366f1; color: white; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; }
+.btn-primary { width: 100%; padding: 0.625rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 .switch      { margin-top: 1rem; font-size: 0.875rem; text-align: center; color: #6b7280; }
 </style>

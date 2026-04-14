@@ -120,11 +120,11 @@ async function submit() {
 .composer       { background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem; }
 .title-input    { width: 100%; border: none; font-size: 1rem; font-weight: 600; outline: none; margin-bottom: 0.5rem; box-sizing: border-box; }
 .content-input  { width: 100%; border: none; resize: vertical; font-size: 0.9rem; outline: none; font-family: inherit; line-height: 1.6; box-sizing: border-box; }
-.composer-footer { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #f3f4f6; }
+.composer-footer { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #f4f4f4; }
 .channel-select { font-size: 0.8rem; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.25rem 0.5rem; color: #6b7280; }
 .char-count     { font-size: 0.8rem; color: #9ca3af; margin-left: auto; }
 .char-count.over { color: #ef4444; }
-.btn-primary    { padding: 0.375rem 1rem; background: #6366f1; color: white; border: none; border-radius: 6px; font-size: 0.875rem; cursor: pointer; }
+.btn-primary    { padding: 0.375rem 1rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 0.875rem; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .error          { color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem; }
 .previews      { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
@@ -132,5 +132,5 @@ async function submit() {
 .preview-item img    { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
 .preview-item button { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%; background: #111; color: white; border: none; cursor: pointer; font-size: 10px; display: flex; align-items: center; justify-content: center; }
 .upload-btn    { cursor: pointer; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 1rem; }
-.upload-btn:hover { background: #f3f4f6; }
+.upload-btn:hover { background: #f4f4f4; }
 </style>

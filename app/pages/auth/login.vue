@@ -61,7 +61,7 @@ h1           { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
 label        { display: block; font-size: 0.875rem; margin-bottom: 0.375rem; color: #374151; }
 input        { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 0.9rem; box-sizing: border-box; }
 .error       { color: #ef4444; font-size: 0.875rem; margin-bottom: 0.75rem; }
-.btn-primary { width: 100%; padding: 0.625rem; background: #6366f1; color: white; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; }
+.btn-primary { width: 100%; padding: 0.625rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 .switch      { margin-top: 1rem; font-size: 0.875rem; text-align: center; color: #6b7280; }
 </style>

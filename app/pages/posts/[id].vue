@@ -33,7 +33,8 @@
       </div>
 
       <h1 v-if="post.title" class="post-title">{{ post.title }}</h1>
-      <p class="post-content">{{ post.content }}</p>
+      <div class="post-content md-content" v-html="post.contentHtml ?? post.content" />
+
 
     <div v-if="post.media?.length" class="media-grid" :class="`count-${post.media.length}`">
         <img
@@ -150,21 +151,21 @@ async function deletePost() {
 .post-header    { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
 .author         { display: flex; gap: 0.75rem; text-decoration: none; color: inherit; }
 .avatar         { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
-.avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: #6366f1; color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 600; }
+.avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 600; }
 .display-name   { font-weight: 600; }
 .handle         { font-size: 0.85rem; color: #9ca3af; }
 .post-info      { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; }
-.channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: #ede9fe; color: #6366f1; border-radius: 9999px; text-decoration: none; }
+.channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: #ede9fe; color: var(--accent); border-radius: 9999px; text-decoration: none; }
 .date           { font-size: 0.8rem; color: #9ca3af; }
 .post-title     { font-size: 1.4rem; font-weight: 700; margin: 0 0 0.75rem; }
-.post-content   { font-size: 0.95rem; line-height: 1.7; color: #374151; white-space: pre-wrap; margin: 0; }
-.post-actions   { display: flex; gap: 1rem; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid #f3f4f6; }
+.post-content   { font-size: 0.95rem; line-height: 1.7; color: #374151; white-space: pre-wrap; margin: 0;  max-height: none;  -webkit-mask-image: none; mask-image: none;}
+.post-actions   { display: flex; gap: 1rem; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid #f4f4f4; }
 .action-btn     { background: none; border: none; cursor: pointer; font-size: 0.875rem; color: #6b7280; padding: 0.25rem 0.5rem; border-radius: 6px; }
-.action-btn:hover { background: #f3f4f6; }
+.action-btn:hover { background: #f4f4f4; }
 .action-btn.danger:hover { background: #fee2e2; color: #ef4444; }
 .reply-composer { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
 .reply-input    { width: 100%; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.625rem; font-size: 0.9rem; font-family: inherit; resize: vertical; outline: none; box-sizing: border-box; }
-.btn-primary    { align-self: flex-end; padding: 0.375rem 1rem; background: #6366f1; color: white; border: none; border-radius: 6px; font-size: 0.875rem; cursor: pointer; }
+.btn-primary    { align-self: flex-end; padding: 0.375rem 1rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 0.875rem; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .replies        { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
 .deleted-author { font-size: 0.875rem; color: #9ca3af; font-style: italic; }

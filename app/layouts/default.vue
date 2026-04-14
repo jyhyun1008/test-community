@@ -50,10 +50,10 @@ const { data: channels } = await useFetch('/api/channels')
 .logo          { font-weight: 700; font-size: 1.1rem; text-decoration: none; color: inherit; }
 .channel-nav   { display: flex; gap: 0.5rem; flex: 1; }
 .channel-link  { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; text-decoration: none; color: #6b7280; }
-.channel-link:hover, .channel-link.router-link-active { background: #f3f4f6; color: #111827; }
+.channel-link:hover, .channel-link.router-link-active { background: #f4f4f4; color: #111827; }
 .nav-actions   { display: flex; align-items: center; gap: 0.75rem; }
 .handle        { font-size: 0.875rem; color: #6b7280; }
 .btn-ghost     { padding: 0.375rem 0.75rem; border-radius: 6px; border: 1px solid #e5e7eb; background: none; cursor: pointer; font-size: 0.875rem; font-family: inherit;}
-.btn-primary   { padding: 0.375rem 0.75rem; border-radius: 6px; background: #6366f1; color: white; text-decoration: none; font-size: 0.875rem; font-family: inherit;}
+.btn-primary   { padding: 0.375rem 0.75rem; border-radius: 6px; background: var(--accent); color: white; text-decoration: none; font-size: 0.875rem; font-family: inherit;}
 .main          { max-width: 1080px; margin: 0 auto; padding: 1.5rem 1rem; }
 </style>

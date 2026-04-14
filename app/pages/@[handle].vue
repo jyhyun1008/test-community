@@ -72,7 +72,7 @@ async function toggleFollow() {
 .header-img      { width: 100%; height: 160px; object-fit: cover; }
 .profile-body    { display: flex; align-items: flex-end; gap: 1rem; padding: 1rem 1.25rem; }
 .avatar          { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-top: -36px; }
-.avatar-placeholder { width: 72px; height: 72px; border-radius: 50%; background: #6366f1; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; border: 3px solid white; margin-top: -36px; }
+.avatar-placeholder { width: 72px; height: 72px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; border: 3px solid white; margin-top: -36px; }
 .profile-info h1 { font-size: 1.25rem; font-weight: 700; margin: 0; }
 .handle          { color: #9ca3af; font-size: 0.875rem; margin: 0.25rem 0; }
 .bio             { color: #374151; font-size: 0.9rem; margin: 0.5rem 0 0; }
@@ -80,8 +80,8 @@ async function toggleFollow() {
 .empty           { text-align: center; padding: 3rem; color: #9ca3af; }
 
 .profile-top  { display: flex; justify-content: space-between; align-items: flex-start; }
-.follow-btn   { padding: 0.5rem 1.25rem; border-radius: 9999px; border: 1px solid #6366f1; color: #6366f1; background: white; cursor: pointer; font-size: 0.875rem; font-weight: 600; }
-.follow-btn.following { background: #6366f1; color: white; }
+.follow-btn   { padding: 0.5rem 1.25rem; border-radius: 9999px; border: 1px solid var(--accent); color: var(--accent); background: white; cursor: pointer; font-size: 0.875rem; font-weight: 600; }
+.follow-btn.following { background: var(--accent); color: white; }
 .follow-btn.following:hover { background: #ef4444; border-color: #ef4444; content: '언팔로우'; }
 .stats        { display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280; }
 .stats b      { color: #111827; }

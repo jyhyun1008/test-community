@@ -28,9 +28,8 @@
 
     <NuxtLink :to="`/posts/${post.id}`" class="post-body">
         <h2 v-if="post.title" class="post-title">{{ post.title }}</h2>
-        <p class="post-content" :class="{ deleted: post.content === '[삭제된 글입니다]' }">
-            {{ post.content }}
-        </p>
+        <div class="post-content md-content" :class="{ deleted: post.content === '[삭제된 글입니다]' }" v-html="post.contentHtml ?? post.content" >
+        </div>
   <!-- 미디어 추가 -->
   <div v-if="post.media?.length" class="media-grid" :class="`count-${post.media.length}`">
     <img
@@ -73,6 +72,7 @@ const props = defineProps<{
     id: string
     title: string | null
     content: string
+    contentHtml: string
     createdAt: string
     likeCount: number
     replyCount: number
@@ -125,18 +125,18 @@ async function deletePost() {
 .post-meta      { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
 .author         { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit; }
 .avatar         { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-.avatar-placeholder { width: 32px; height: 32px; border-radius: 50%; background: #6366f1; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600; }
+.avatar-placeholder { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600; }
 .display-name   { font-weight: 600; font-size: 0.9rem; }
 .handle         { color: #9ca3af; font-size: 0.8rem; }
 .post-info      { display: flex; align-items: center; gap: 0.5rem; }
-.channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: #ede9fe; color: #6366f1; border-radius: 9999px; text-decoration: none; }
+.channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: #ede9fe; color: var(--accent); border-radius: 9999px; text-decoration: none; }
 .date           { font-size: 0.75rem; color: #9ca3af; }
 .post-body      { text-decoration: none; color: inherit; display: block; }
 .post-title     { font-size: 1rem; font-weight: 600; margin: 0 0 0.375rem; }
-.post-content   { font-size: 0.9rem; color: #374151; line-height: 1.6; margin: 0; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.post-actions   { display: flex; gap: 1rem; margin-top: 0.875rem; padding-top: 0.875rem; border-top: 1px solid #f3f4f6; }
+.post-content   { font-size: 0.9rem; color: #374151; line-height: 1.6; margin: 0; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; max-height: 200px; -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); mask-image: linear-gradient(to bottom, black 60%, transparent 100%);}
+.post-actions   { display: flex; gap: 1rem; margin-top: 0.875rem; padding-top: 0.875rem; border-top: 1px solid #f4f4f4; }
 .action-btn     { background: none; border: none; cursor: pointer; font-size: 0.875rem; color: #6b7280; padding: 0.25rem 0.5rem; border-radius: 6px; }
-.action-btn:hover { background: #f3f4f6; }
+.action-btn:hover { background: #f4f4f4; }
 .action-btn.active { color: #ef4444; }
 .deleted { color: #9ca3af; font-style: italic; }
 .deleted-author { font-size: 0.875rem; color: #9ca3af; font-style: italic; }

@@ -3,6 +3,7 @@ import { posts, channels, media } from '../../db/schema'
 import { requireAuth } from '../../utils/auth'
 import { eq, sql, inArray } from 'drizzle-orm'
 import { z } from 'zod'
+import { renderMarkdown } from '../../utils/markdown'
 
 const schema = z.object({
   title:      z.string().max(200).optional(),
@@ -35,6 +36,7 @@ export default defineEventHandler(async (event) => {
     channelId,
     title:       body.title,
     content:     body.content,
+    contentHtml: renderMarkdown(body.content),
     visibility:  body.visibility,
     replyToId:   body.replyToId,
     isSensitive: body.sensitive,

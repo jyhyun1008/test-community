@@ -28,6 +28,6 @@ const { data: stats } = await useFetch('/api/admin/stats', { headers })
 h1          { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
 .stats      { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .stat-card  { background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1.5rem; text-align: center; }
-.stat-value { font-size: 2rem; font-weight: 700; color: #6366f1; }
+.stat-value { font-size: 2rem; font-weight: 700; color: var(--accent); }
 .stat-label { font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem; }
 </style>

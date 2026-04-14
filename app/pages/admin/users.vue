@@ -92,7 +92,7 @@ h1            { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
 .table-wrap   { background: white; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
 table         { width: 100%; border-collapse: collapse; }
 th            { text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; color: #6b7280; border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
-td            { padding: 0.75rem 1rem; font-size: 0.875rem; border-bottom: 1px solid #f3f4f6; }
+td            { padding: 0.75rem 1rem; font-size: 0.875rem; border-bottom: 1px solid #f4f4f4; }
 select        { padding: 0.25rem; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 0.875rem; }
 .btn-danger-sm  { padding: 0.25rem 0.5rem; background: #fee2e2; color: #ef4444; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
 .btn-warning-sm { padding: 0.25rem 0.5rem; background: #fef3c7; color: #d97706; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }

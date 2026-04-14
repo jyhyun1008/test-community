@@ -5,6 +5,7 @@ services:
     env_file: .env
     ports:
       - "3000:3000"
+    command: sh -c "node migrate.mjs && node .output/server/index.mjs"
     depends_on:
       postgres:
         condition: service_healthy

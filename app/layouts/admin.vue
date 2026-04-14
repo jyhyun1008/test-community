@@ -28,6 +28,6 @@
 .logo          { font-size: 0.8rem; color: #9ca3af; text-decoration: none; }
 h2             { font-size: 1rem; font-weight: 700; margin: 0.5rem 0 0; }
 .nav-item      { display: block; padding: 0.5rem 0.75rem; border-radius: 6px; text-decoration: none; color: #374151; font-size: 0.9rem; }
-.nav-item:hover, .nav-item.router-link-active { background: #f3f4f6; }
+.nav-item:hover, .nav-item.router-link-active { background: #f4f4f4; }
 .admin-main    { flex: 1; padding: 2rem; max-width: 900px; }
 </style>
