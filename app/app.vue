@@ -56,8 +56,12 @@
     font-family: 'IbmPlexSans';
 }
 
-.md-content *:not(h1, h2, h3, h4, h5, h6) {
+.md-content *:not(h1, h2, h3, h4, h5, h6){
   margin: -0.5rem 0 !important;
+}
+
+.md-content *:first-child {
+  margin-top: 0 !important;
 }
 
 .md-content h1, .md-content h2, .md-content h3 {
