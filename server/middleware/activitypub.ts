@@ -1,4 +1,6 @@
 // server/middleware/activitypub.ts
+import { proxyRequest } from 'h3'
+
 export default defineEventHandler(async (event) => {
   const path = event.path.split('?')[0]
   const qs   = event.path.includes('?') ? event.path.slice(event.path.indexOf('?')) : ''
@@ -25,6 +27,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (targetPath) {
-    await sendProxy(event, `http://localhost:${process.env.PORT ?? 3000}${targetPath}`)
+    console.log('proxying:', event.method, targetPath)
+    return proxyRequest(event, `http://127.0.0.1:3000${targetPath}`)
   }
 })
