@@ -20,6 +20,7 @@
         <div class="nav-actions">
             <UserSearch v-if="auth.isLoggedIn" />  <!-- ← 추가 -->
           <template v-if="auth.isLoggedIn">
+            <NuxtLink to="/settings" class="btn-ghost">설정</NuxtLink>
             <span class="handle">@{{ auth.user?.handle }}</span>
             <button @click="auth.logout" class="btn-ghost">로그아웃</button>
           </template>
