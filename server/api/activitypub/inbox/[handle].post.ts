@@ -2,6 +2,8 @@ import { db } from '../../../db'
 import { users, activities, posts, follows } from '../../../db/schema'
 import { verifySignature } from '../../../utils/httpSignature'
 import { eq, and } from 'drizzle-orm'
+import { deliverActivity } from '../../../utils/federation'
+
 
 export default defineEventHandler(async (event) => {
   const handle = getRouterParam(event, 'handle')!
@@ -94,6 +96,23 @@ async function processActivity(activity: any, actorId?: string) {
         followingId: targetUser.id,
         accepted:    !targetUser.isLocked,
       }).onConflictDoNothing()
+
+        // actor 객체 다시 조회
+        const followerActor = await db.query.users.findFirst({
+            where: eq(users.id, actorId),
+        })
+        if (!followerActor?.inboxUrl) break
+
+        // Accept 액티비티 돌려보내기 ← 이게 없었던 것
+        const acceptActivity = {
+            '@context': 'https://www.w3.org/ns/activitystreams',
+            id:         `${targetUser.actorUrl}#accept-${Date.now()}`,
+            type:       'Accept',
+            actor:      targetUser.actorUrl,
+            object:     activity,
+        }
+
+        await deliverActivity(acceptActivity, targetUser.handle, followerActor.inboxUrl!)
       break
     }
 
