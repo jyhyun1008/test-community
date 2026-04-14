@@ -2,6 +2,9 @@
 export default defineEventHandler(async (event) => {
   const path = event.path.split('?')[0]
   const qs   = event.path.includes('?') ? event.path.slice(event.path.indexOf('?')) : ''
+  const method = event.method  // ← 메서드 확인용
+
+  console.log('AP middleware:', method, path)  // 임시 로그
 
   let targetPath: string | null = null
 
