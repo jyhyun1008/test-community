@@ -1,12 +1,15 @@
 import { db } from '../../db'
 import { users, follows } from '../../db/schema'
-import { eq, count } from 'drizzle-orm'
+import { and, eq, count } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const handle = getRouterParam(event, 'handle')!
 
   const user = await db.query.users.findFirst({
-    where: eq(users.handle, handle),
+    where: and(
+        eq(users.handle, handle),
+        eq(users.isLocal, true),  // ← 추가
+    ),
     columns: {
       id: true, handle: true, domain: true,
       displayName: true, bio: true,
