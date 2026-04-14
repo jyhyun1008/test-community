@@ -16,9 +16,15 @@
         <img v-if="result.avatarUrl" :src="result.avatarUrl" class="avatar" />
         <div v-else class="avatar-placeholder">{{ result.handle[0].toUpperCase() }}</div>
         <div class="result-info">
-          <div class="display-name">{{ result.displayName ?? result.handle }}</div>
-          <div class="handle">@{{ result.handle }}@{{ result.domain }}</div>
-        </div>
+            <NuxtLink
+                :to="`/@${result.handle}@${result.domain}`"
+                class="display-name"
+                @click="showResult = false"
+            >
+                {{ result.displayName ?? result.handle }}
+            </NuxtLink>
+            <div class="handle">@{{ result.handle }}@{{ result.domain }}</div>
+            </div>
         <button
           class="follow-btn"
           :class="{ following: isFollowing }"
@@ -56,8 +62,11 @@ async function lookup() {
     result.value = await $fetch(`/api/users/lookup?acct=${acct}`)
     showResult.value = true
 
-    // 팔로우 상태 확인
-    const status = await $fetch(`/api/users/${result.value.handle}/follow-status`)
+    // 팔로우 상태 확인// 팔로우 상태 확인 - 리모트면 handle@domain으로
+    const statusHandle = result.value.isLocal 
+    ? result.value.handle 
+    : `${result.value.handle}@${result.value.domain}`
+    const status = await $fetch(`/api/users/${statusHandle}/follow-status`)
     isFollowing.value = status.following
   } catch {
     error.value = '유저를 찾을 수 없습니다'
@@ -66,10 +75,12 @@ async function lookup() {
 
 async function toggleFollow() {
   if (!auth.isLoggedIn) return navigateTo('/auth/login')
-  const res = await $fetch(`/api/follows/${result.value.handle}`, { method: 'POST' })
+  const followHandle = result.value.isLocal
+    ? result.value.handle
+    : `${result.value.handle}@${result.value.domain}`
+  const res = await $fetch(`/api/follows/${followHandle}`, { method: 'POST' })
   isFollowing.value = res.following
 }
-
 // 바깥 클릭시 닫기
 onMounted(() => {
   document.addEventListener('click', (e) => {

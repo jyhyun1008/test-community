@@ -12,9 +12,15 @@ export default defineEventHandler(async (event) => {
   const payload = await verifyToken(token).catch(() => null)
   if (!payload) return { following: false }
 
+  const [handlePart, domainPart] = handle.includes('@') 
+  ? handle.split('@') 
+  : [handle, null]
+
   const target = await db.query.users.findFirst({
-    where: eq(users.handle, handle),
-  })
+  where: domainPart
+    ? and(eq(users.handle, handlePart), eq(users.domain, domainPart))
+    : eq(users.handle, handlePart),
+})
   if (!target) return { following: false }
 
   const existing = await db.query.follows.findFirst({

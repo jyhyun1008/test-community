@@ -51,6 +51,16 @@ const auth   = useAuthStore()
 const route  = useRoute()
 const handle = route.params.handle as string
 
+// URL에서 @ 제거하고 @domain 있으면 lookup, 없으면 로컬
+const isRemote = handle.includes('@')
+const acct     = isRemote ? handle : null
+
+const { data: user2, pending } = await useFetch(
+  isRemote
+    ? `/api/users/lookup?acct=${handle}`
+    : `/api/users/${handle}`
+)
+
 const { data: user }                       = await useFetch(`/api/users/${handle}`)
 const { data: posts, refresh: refreshPosts } = await useFetch('/api/posts', { query: { author: handle } })
 const { data: followStatus }               = await useFetch(`/api/users/${handle}/follow-status`)
