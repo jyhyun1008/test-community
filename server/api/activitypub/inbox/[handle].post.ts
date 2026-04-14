@@ -23,9 +23,10 @@ export default defineEventHandler(async (event) => {
   const headers = Object.fromEntries(
     Object.entries(getHeaders(event)).map(([k, v]) => [k.toLowerCase(), v as string])
   )
-
   // HTTP Signature 검증
   const actorUrl = body.actor
+
+    console.log('🔑 fetching actor:', actorUrl)
   if (!actorUrl) {
     throw createError({ statusCode: 400, message: 'Missing actor' })
   }
@@ -57,6 +58,7 @@ export default defineEventHandler(async (event) => {
 
     actor = newActor
   }
+  console.log('🔑 actor fetched:', actor?.handle)
 
   // 서명 검증
   const valid = verifySignature(
@@ -69,6 +71,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: 'Invalid signature' })
   }
 
+    console.log('🔑 signature valid:', valid)
   // Activity 로깅
   await db.insert(activities).values({
     apId:      body.id,
