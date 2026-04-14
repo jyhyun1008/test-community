@@ -6,6 +6,7 @@ RUN npm i
 RUN npm ci
 
 COPY . .
+RUN rm -rf .nuxt .output
 RUN npm run build
 
 FROM node:22-alpine AS runner
