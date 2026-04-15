@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <NuxtLink :to="`/posts/${post.id}`" class="post-body">
+    <div class="post-body" @click="handleBodyClick">
       <h2 v-if="post.title" class="post-title">{{ post.title }}</h2>
       <div class="post-content md-content" :class="{ deleted: post.content === '[삭제된 글입니다]' }" v-html="post.contentHtml ?? post.content" />
       <div v-if="post.media?.length" class="media-grid" :class="`count-${post.media.length}`">
@@ -34,7 +34,7 @@
           class="media-img"
         />
       </div>
-    </NuxtLink>
+    </div>
 
     <div class="post-actions">
       <button class="action-btn">
@@ -95,6 +95,12 @@ const props = defineProps<{
   }
 }>()
 
+function handleBodyClick(e: MouseEvent) {
+  // 콘텐츠 내부 링크(멘션, URL) 클릭은 브라우저에 위임
+  if ((e.target as HTMLElement).closest('a')) return
+  navigateTo(`/posts/${props.post.id}`)
+}
+
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString('ko-KR', {
     month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
@@ -129,9 +135,11 @@ async function deletePost() {
 .post-info      { display: flex; align-items: center; gap: 0.5rem; }
 .channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--badge-bg); color: var(--badge-color); border-radius: 9999px; text-decoration: none; }
 .date           { font-size: 0.75rem; color: var(--text-placeholder); }
-.post-body      { text-decoration: none; color: inherit; display: block; }
+.post-body      { color: inherit; display: block; cursor: pointer; }
 .post-title     { font-size: 1rem; font-weight: 600; margin: 0 0 0.375rem; color: var(--text-primary); }
-.post-content   { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin: 0; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; max-height: 200px; -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
+.post-content   { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin: 0; overflow: hidden; max-height: 4.8rem; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); mask-image: linear-gradient(to bottom, black 40%, transparent 100%); }
+.post-content :deep(p)  { margin: 0; }
+.post-content :deep(br) { display: block; content: ''; margin-top: 0.4rem; }
 .post-actions   { display: flex; gap: 0.5rem; margin-top: 0.875rem; padding-top: 0.875rem; border-top: 1px solid var(--border-subtle); }
 .action-btn     { display: flex; align-items: center; gap: 0.3rem; background: none; border: none; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 6px; font-family: inherit; }
 .action-btn:hover { background: var(--bg-hover); }
