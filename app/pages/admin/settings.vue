@@ -21,7 +21,12 @@
       >{{ tab.label }}</button>
     </div>
 
-    <div v-if="form" class="form-body">
+    <div v-if="fetchError" class="error-box">
+      설정을 불러오지 못했습니다. 마이그레이션이 실행됐는지 확인해주세요.<br />
+      <code>{{ fetchError }}</code>
+    </div>
+
+    <div v-else-if="form" class="form-body">
 
       <!-- ── 기본 정보 ───────────────────────────────────── -->
       <div v-if="activeTab === 'info'" class="section-card">
@@ -254,6 +259,7 @@
     </div>
 
     <div v-else class="loading">불러오는 중...</div>
+
   </div>
 </template>
 
@@ -275,11 +281,15 @@ const tabs = [
 const activeTab = ref('info')
 
 const headers = useRequestHeaders(['cookie'])
-const { data } = await useFetch('/api/admin/settings', { headers })
+const { data, error } = await useFetch('/api/admin/settings', { headers })
+
+const fetchError = computed(() =>
+  error.value ? (error.value.data?.message ?? error.value.message ?? '알 수 없는 오류') : null
+)
 
 // merged 설정을 폼 초기값으로 사용
 const form = ref<InstanceConfig | null>(null)
-if (data.value) {
+if (data.value?.settings) {
   form.value = JSON.parse(JSON.stringify(data.value.settings)) as InstanceConfig
 }
 
@@ -355,4 +365,6 @@ textarea.mono  { font-family: monospace; font-size: 0.8rem; }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .loading       { color: var(--text-muted); padding: 2rem; text-align: center; }
+.error-box     { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 1rem 1.25rem; color: #b91c1c; font-size: 0.875rem; line-height: 1.7; }
+.error-box code { font-size: 0.8rem; display: block; margin-top: 0.5rem; color: #7f1d1d; word-break: break-all; }
 </style>

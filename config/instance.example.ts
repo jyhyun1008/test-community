@@ -63,7 +63,7 @@ const config: InstanceConfig = {
   // ─── UI 설정 ────────────────────────────────────────
   ui: {
     defaultTheme: 'system',    // light | dark | system
-    accentColor: 'var(--accent)',
+    accentColor: '#6366f1',
     logoUrl: '',               // 비어있으면 기본 로고
     faviconUrl: '',
     customCss: '',

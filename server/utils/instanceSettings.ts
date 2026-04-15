@@ -8,23 +8,30 @@ export async function getInstanceSettings(): Promise<InstanceConfig> {
   const config = useRuntimeConfig()
   const base = config.instance as InstanceConfig
 
-  const row = await db.query.instanceSettings.findFirst({
-    where: eq(instanceSettings.id, 1),
-  })
-
-  if (!row || !row.overrides || Object.keys(row.overrides).length === 0) {
+  try {
+    const row = await db.query.instanceSettings.findFirst({
+      where: eq(instanceSettings.id, 1),
+    })
+    if (!row || !row.overrides || Object.keys(row.overrides as object).length === 0) {
+      return base
+    }
+    return deepMerge(base, row.overrides as Partial<InstanceConfig>)
+  } catch {
+    // 테이블 미존재(마이그레이션 미실행) 등의 경우 기본값으로 폴백
     return base
   }
-
-  return deepMerge(base, row.overrides as Partial<InstanceConfig>)
 }
 
 /** DB에 저장된 오버라이드 부분만 반환 (관리자 페이지 초기값 로드용) */
 export async function getInstanceOverrides(): Promise<Partial<InstanceConfig>> {
-  const row = await db.query.instanceSettings.findFirst({
-    where: eq(instanceSettings.id, 1),
-  })
-  return (row?.overrides ?? {}) as Partial<InstanceConfig>
+  try {
+    const row = await db.query.instanceSettings.findFirst({
+      where: eq(instanceSettings.id, 1),
+    })
+    return (row?.overrides ?? {}) as Partial<InstanceConfig>
+  } catch {
+    return {}
+  }
 }
 
 /** 오버라이드를 DB에 upsert */
