@@ -23,6 +23,9 @@
         <NuxtLink to="/admin/emojis" class="nav-item">
           <IconMoodSmile :size="16" /> 커스텀 이모지
         </NuxtLink>
+        <NuxtLink to="/admin/settings" class="nav-item">
+          <IconSettings :size="16" /> 서버 설정
+        </NuxtLink>
       </nav>
       <div class="sidebar-footer">
         <button class="theme-toggle" @click="theme.toggle()">
@@ -39,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { IconArrowLeft, IconLayoutDashboard, IconFolder, IconUsers, IconBan, IconMoon, IconSun, IconMoodSmile } from '@tabler/icons-vue'
+import { IconArrowLeft, IconLayoutDashboard, IconFolder, IconUsers, IconBan, IconMoon, IconSun, IconMoodSmile, IconSettings } from '@tabler/icons-vue'
 const theme = useTheme()
 </script>
 <style scoped>

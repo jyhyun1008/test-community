@@ -209,3 +209,12 @@ export const likesRelations = relations(likes, ({ one }) => ({
   user: one(users, { fields: [likes.userId], references: [users.id] }),
   post: one(posts, { fields: [likes.postId], references: [posts.id] }),
 }))
+
+// ─── Instance Settings ───────────────────────────────────
+// 단일 행(id=1)에 config/instance.ts 오버라이드를 JSONB로 저장
+
+export const instanceSettings = pgTable('instance_settings', {
+  id:        integer('id').primaryKey().default(1),
+  overrides: jsonb('overrides').notNull().default({}),
+  updatedAt: timestamp('updated_at').defaultNow(),
+})
