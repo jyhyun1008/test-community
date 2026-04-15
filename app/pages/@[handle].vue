@@ -90,7 +90,7 @@ async function toggleFollow() {
 .loading         { text-align: center; padding: 3rem; color: var(--text-placeholder); }
 .profile-header  { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem; }
 .header-img      { width: 100%; height: 160px; object-fit: cover; }
-.profile-body    { display: flex; align-items: flex-end; gap: 1rem; padding: 1rem 1.25rem; }
+.profile-body    { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 1.25rem; }
 .avatar          { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--bg-surface); margin-top: -36px; flex-shrink: 0; }
 .avatar-placeholder { width: 72px; height: 72px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; border: 3px solid var(--bg-surface); margin-top: -36px; flex-shrink: 0; }
 .profile-info    { flex: 1; min-width: 0; }
