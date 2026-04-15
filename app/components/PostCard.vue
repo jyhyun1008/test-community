@@ -137,7 +137,7 @@ async function deletePost() {
 .date           { font-size: 0.75rem; color: var(--text-placeholder); }
 .post-body      { color: inherit; display: block; cursor: pointer; }
 .post-title     { font-size: 1rem; font-weight: 600; margin: 0 0 0.375rem; color: var(--text-primary); }
-.post-content   { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin: 0; overflow: hidden; max-height: 6rem; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); mask-image: linear-gradient(to bottom, black 40%, transparent 100%); }
+.post-content   { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin: 0; overflow: hidden; max-height: 4.8rem; padding-bottom: 1.5rem; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); mask-image: linear-gradient(to bottom, black 40%, transparent 100%); }
 .post-content :deep(p)  { margin: 0; }
 .post-content :deep(br) { display: block; content: ''; margin-top: 0.4rem; }
 .post-actions   { display: flex; gap: 0.5rem; margin-top: 0.875rem; padding-top: 0.875rem; border-top: 1px solid var(--border-subtle); }
