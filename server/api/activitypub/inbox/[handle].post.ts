@@ -1,7 +1,7 @@
 import { db } from '../../../db'
 import { users, activities, posts, follows, customEmojis } from '../../../db/schema'
 import { verifySignature } from '../../../utils/httpSignature'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, sql } from 'drizzle-orm'
 import { deliverActivity } from '../../../utils/federation'
 
 
@@ -188,11 +188,26 @@ async function processActivity(activity: any, actorId?: string) {
           })
         }
 
+        // inReplyTo 처리 — 로컬 글이면 replyToId 연결 + replyCount 증가
+        let replyToId: string | undefined
+        if (note.inReplyTo) {
+          const parentPost = await db.query.posts.findFirst({
+            where: eq(posts.apId, note.inReplyTo),
+          })
+          if (parentPost) {
+            replyToId = parentPost.id
+            await db.update(posts)
+              .set({ replyCount: sql`${posts.replyCount} + 1` })
+              .where(eq(posts.id, parentPost.id))
+          }
+        }
+
         await db.insert(posts).values({
           apId:        note.id,
           authorId:    actorId,
           content:     note.content ?? '',
           contentHtml,
+          replyToId,
           visibility:  'public',
           isLocal:     false,
         }).onConflictDoNothing()

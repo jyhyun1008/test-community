@@ -1,6 +1,6 @@
 import { db } from '../../db'
-import { deliverToFollowers } from '../../utils/federation'
-import { posts, channels, media, follows, customEmojis } from '../../db/schema'
+import { deliverToFollowers, deliverActivity } from '../../utils/federation'
+import { posts, channels, media, follows, users, customEmojis } from '../../db/schema'
 import { requireAuth } from '../../utils/auth'
 import { eq, sql, inArray, isNull } from 'drizzle-orm'
 import { z } from 'zod'
@@ -36,6 +36,15 @@ export default defineEventHandler(async (event) => {
   const emojiRows = await db.select().from(customEmojis).where(isNull(customEmojis.domain))
   const emojiMap = Object.fromEntries(emojiRows.map(e => [e.shortcode, e.url]))
 
+  // 답글이면 부모 글 조회 (inReplyTo AP IRI + 작성자 inbox 확보)
+  let parentPost: { id: string; apId: string | null; author: { actorUrl: string | null; inboxUrl: string | null; isLocal: boolean | null } | null } | null = null
+  if (body.replyToId) {
+    parentPost = await db.query.posts.findFirst({
+      where: eq(posts.id, body.replyToId),
+      with: { author: { columns: { actorUrl: true, inboxUrl: true, isLocal: true } } },
+    }) ?? null
+  }
+
   const [post] = await db.insert(posts).values({
     authorId:    user.id,
     channelId,
@@ -48,13 +57,12 @@ export default defineEventHandler(async (event) => {
     isLocal:     true,
   }).returning()
 
-
-    // 답글이면 부모 글 replyCount 증가  ← 추가
-    if (body.replyToId) {
+  // 부모 글 replyCount 증가
+  if (body.replyToId) {
     await db.update(posts)
-        .set({ replyCount: sql`${posts.replyCount} + 1` })
-        .where(eq(posts.id, body.replyToId))
-    }
+      .set({ replyCount: sql`${posts.replyCount} + 1` })
+      .where(eq(posts.id, body.replyToId))
+  }
 
   // 미디어 연결  ← 추가
   if (body.mediaIds.length > 0) {
@@ -79,38 +87,57 @@ const remoteFollowerInboxes = followerList
   .filter(f => !f.follower.isLocal && f.follower.inboxUrl)
   .map(f => f.follower.inboxUrl!)
 
-if (remoteFollowerInboxes.length > 0) {
-  // 본문에서 커스텀 이모지 태그 추출
-  const emojiTags = Object.entries(emojiMap)
-    .filter(([sc]) => post.content.includes(`:${sc}:`))
-    .map(([sc, url]) => ({
-      type: 'Emoji',
-      name: `:${sc}:`,
-      icon: { type: 'Image', url },
-    }))
+// 본문에서 커스텀 이모지 태그 추출
+const emojiTags = Object.entries(emojiMap)
+  .filter(([sc]) => post.content.includes(`:${sc}:`))
+  .map(([sc, url]) => ({
+    type: 'Emoji',
+    name: `:${sc}:`,
+    icon: { type: 'Image', url },
+  }))
 
-  const createActivity = {
-    '@context': [
-      'https://www.w3.org/ns/activitystreams',
-      { toot: 'http://joinmastodon.org/ns#', Emoji: 'toot:Emoji' },
-    ],
-    id:         `https://${domain}/posts/${post.id}#activity`,
-    type:       'Create',
-    actor:      `https://${domain}/users/${user.handle}`,
-    published:  post.createdAt,
-    to:         ['https://www.w3.org/ns/activitystreams#Public'],
-    object: {
-      id:           `https://${domain}/posts/${post.id}`,
-      type:         'Note',
-      content:      post.contentHtml ?? post.content,
-      published:    post.createdAt,
-      attributedTo: `https://${domain}/users/${user.handle}`,
-      to:           ['https://www.w3.org/ns/activitystreams#Public'],
-      tag:          emojiTags.length > 0 ? emojiTags : undefined,
-    },
-  }
-  // 비동기로 배달 (응답 기다리지 않음)
-  deliverToFollowers(createActivity, user.handle, remoteFollowerInboxes).catch(console.error)
+const followersUrl = `https://${domain}/users/${user.handle}/followers`
+const asPublic     = 'https://www.w3.org/ns/activitystreams#Public'
+
+// 답글이면 부모 작성자를 cc에 추가
+const noteTo: string[] = [asPublic]
+const noteCc:  string[] = [followersUrl]
+if (parentPost?.author?.actorUrl) {
+  noteCc.push(parentPost.author.actorUrl)
+}
+
+const createActivity = {
+  '@context': [
+    'https://www.w3.org/ns/activitystreams',
+    { toot: 'http://joinmastodon.org/ns#', Emoji: 'toot:Emoji' },
+  ],
+  id:         `https://${domain}/posts/${post.id}#activity`,
+  type:       'Create',
+  actor:      `https://${domain}/users/${user.handle}`,
+  published:  post.createdAt,
+  to:         noteTo,
+  cc:         noteCc,
+  object: {
+    id:           `https://${domain}/posts/${post.id}`,
+    type:         'Note',
+    content:      post.contentHtml ?? post.content,
+    published:    post.createdAt,
+    attributedTo: `https://${domain}/users/${user.handle}`,
+    to:           noteTo,
+    cc:           noteCc,
+    inReplyTo:    parentPost?.apId ?? null,
+    tag:          emojiTags.length > 0 ? emojiTags : undefined,
+  },
+}
+
+// 전달 대상: 팔로워 + 부모 글 원격 작성자
+const inboxesToDeliver = new Set(remoteFollowerInboxes)
+if (parentPost?.author && !parentPost.author.isLocal && parentPost.author.inboxUrl) {
+  inboxesToDeliver.add(parentPost.author.inboxUrl)
+}
+
+if (inboxesToDeliver.size > 0) {
+  deliverToFollowers(createActivity, user.handle, [...inboxesToDeliver]).catch(console.error)
 }
 
   return { ...post, apId: `https://${domain}/posts/${post.id}` }

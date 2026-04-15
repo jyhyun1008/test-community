@@ -154,7 +154,9 @@ async function deletePost() {
 .channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--badge-bg); color: var(--badge-color); border-radius: 9999px; text-decoration: none; }
 .date           { font-size: 0.8rem; color: var(--text-placeholder); }
 .post-title     { font-size: 1.4rem; font-weight: 700; margin: 0 0 0.75rem; color: var(--text-primary); }
-.post-content   { font-size: 0.95rem; line-height: 1.7; color: var(--text-secondary); white-space: pre-wrap; margin: 0; max-height: none; -webkit-mask-image: none; mask-image: none; }
+.post-content   { font-size: 0.95rem; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+.post-content :deep(p)            { margin: 0 0 0.5rem; }
+.post-content :deep(p:last-child) { margin-bottom: 0; }
 .post-actions   { display: flex; gap: 0.5rem; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border-subtle); }
 .action-btn     { display: flex; align-items: center; gap: 0.3rem; background: none; border: none; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 6px; font-family: inherit; }
 .action-btn:hover { background: var(--bg-hover); }
