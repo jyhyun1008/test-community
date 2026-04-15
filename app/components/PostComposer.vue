@@ -10,7 +10,7 @@
         v-model="form.content"
         class="content-input"
         placeholder="무슨 생각을 하고 있나요?"
-        rows="3"
+        rows="2"
         required
         ref="textareaRef"
       />
@@ -136,8 +136,8 @@ async function submit() {
 .title-input::placeholder { color: var(--text-placeholder); }
 .content-input   { width: 100%; border: none; resize: vertical; font-size: 0.9rem; outline: none; font-family: inherit; line-height: 1.6; box-sizing: border-box; background: transparent; color: var(--text-primary); }
 .content-input::placeholder { color: var(--text-placeholder); }
-.composer-footer { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle); }
-.channel-select  { font-size: 0.8rem; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.5rem; color: var(--text-muted); background: var(--bg-surface); }
+.composer-footer { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle); flex-wrap: wrap; }
+.channel-select  { font-size: 0.8rem; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.5rem; color: var(--text-muted); background: var(--bg-surface); max-width: 120px; }
 .char-count      { font-size: 0.8rem; color: var(--text-placeholder); margin-left: auto; }
 .char-count.over { color: #ef4444; }
 .btn-primary     { padding: 0.375rem 1rem; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 0.875rem; cursor: pointer; }
@@ -149,4 +149,14 @@ async function submit() {
 .remove-btn      { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%; background: #111; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .upload-btn      { cursor: pointer; padding: 0.25rem 0.5rem; border-radius: 6px; color: var(--text-muted); display: flex; align-items: center; }
 .upload-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+@media (max-width: 767px) {
+  .composer        { padding: 0.75rem; }
+  .title-input     { display: none; }
+  .content-input   { font-size: 0.875rem; }
+  .channel-select  { max-width: 90px; font-size: 0.75rem; padding: 0.2rem 0.4rem; }
+  .composer-footer { gap: 0.25rem; margin-top: 0.5rem; padding-top: 0.5rem; }
+  .char-count      { font-size: 0.7rem; }
+  .btn-primary     { padding: 0.3rem 0.75rem; font-size: 0.8rem; }
+}
 </style>

@@ -126,15 +126,15 @@ async function deletePost() {
 <style scoped>
 .post-card      { padding: 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-surface); transition: box-shadow 0.15s; }
 .post-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-.post-meta      { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
-.author         { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit; }
-.avatar         { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-.avatar-placeholder { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600; }
-.display-name   { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
-.handle         { color: var(--text-placeholder); font-size: 0.8rem; }
-.post-info      { display: flex; align-items: center; gap: 0.5rem; }
-.channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--badge-bg); color: var(--badge-color); border-radius: 9999px; text-decoration: none; }
-.date           { font-size: 0.75rem; color: var(--text-placeholder); }
+.post-meta      { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; gap: 0.5rem; }
+.author         { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit; min-width: 0; }
+.avatar         { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.avatar-placeholder { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600; flex-shrink: 0; }
+.display-name   { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
+.handle         { color: var(--text-placeholder); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
+.post-info      { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--badge-bg); color: var(--badge-color); border-radius: 9999px; text-decoration: none; white-space: nowrap; }
+.date           { font-size: 0.75rem; color: var(--text-placeholder); white-space: nowrap; }
 .post-body      { color: inherit; display: block; cursor: pointer; }
 .post-title     { font-size: 1rem; font-weight: 600; margin: 0 0 0.375rem; color: var(--text-primary); }
 .post-content   { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin: 0; overflow: hidden; max-height: 4.8rem; padding-bottom: 1.5rem; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); mask-image: linear-gradient(to bottom, black 40%, transparent 100%); }
@@ -154,4 +154,14 @@ async function deletePost() {
 .media-grid.count-3 .media-img:first-child { grid-column: span 2; }
 .media-grid.count-4  { grid-template-columns: 1fr 1fr; }
 .media-img           { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+
+@media (max-width: 767px) {
+  /* 피드 내 카드: 테두리 없이 구분선만 */
+  .post-card    { padding: 0.875rem 0.875rem; border: none; border-bottom: 1px solid var(--border); border-radius: 0; box-shadow: none; }
+  .post-card:hover { box-shadow: none; }
+  .display-name { max-width: 110px; font-size: 0.85rem; }
+  .handle       { display: none; }
+  .action-btn   { padding: 0.2rem 0.4rem; font-size: 0.75rem; }
+  .post-content { font-size: 0.875rem; }
+}
 </style>

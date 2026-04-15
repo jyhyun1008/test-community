@@ -41,4 +41,8 @@ h1   { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.25rem; color: var(--te
 .loading { text-align: center; padding: 3rem; color: var(--text-placeholder); }
 .empty   { text-align: center; padding: 3rem; color: var(--text-placeholder); }
 .feed    { display: flex; flex-direction: column; gap: 0.75rem; }
+
+@media (max-width: 767px) {
+  .feed { gap: 0; }
+}
 </style>

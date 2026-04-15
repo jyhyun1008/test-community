@@ -144,13 +144,13 @@ async function deletePost() {
 .back-btn:hover { color: var(--text-primary); }
 .loading        { text-align: center; padding: 3rem; color: var(--text-placeholder); }
 .post-detail    { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
-.post-header    { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
-.author         { display: flex; gap: 0.75rem; text-decoration: none; color: inherit; }
-.avatar         { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
-.avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 600; }
-.display-name   { font-weight: 600; color: var(--text-primary); }
-.handle         { font-size: 0.85rem; color: var(--text-placeholder); }
-.post-info      { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; }
+.post-header    { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; gap: 0.5rem; }
+.author         { display: flex; gap: 0.75rem; text-decoration: none; color: inherit; min-width: 0; }
+.avatar         { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 600; flex-shrink: 0; }
+.display-name   { font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.handle         { font-size: 0.85rem; color: var(--text-placeholder); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.post-info      { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0; }
 .channel-badge  { font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--badge-bg); color: var(--badge-color); border-radius: 9999px; text-decoration: none; }
 .date           { font-size: 0.8rem; color: var(--text-placeholder); }
 .post-title     { font-size: 1.4rem; font-weight: 700; margin: 0 0 0.75rem; color: var(--text-primary); }
@@ -176,4 +176,10 @@ async function deletePost() {
 .media-grid.count-3 .media-img:first-child { grid-column: span 2; }
 .media-grid.count-4  { grid-template-columns: 1fr 1fr; }
 .media-img           { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+
+@media (max-width: 767px) {
+  .post-detail  { padding: 1rem 0.875rem; border-radius: 8px; }
+  .avatar, .avatar-placeholder { width: 36px; height: 36px; font-size: 0.875rem; }
+  .post-title   { font-size: 1.2rem; }
+}
 </style>
