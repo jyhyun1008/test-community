@@ -25,3 +25,9 @@ export function renderMarkdown(content: string, emojis: Record<string, string> =
   if (Object.keys(emojis).length === 0) return html
   return applyCustomEmojis(html, emojis)
 }
+
+// ActivityPub 발신용: 이모지를 <img>로 치환하지 않고 :shortcode: 텍스트 유지
+// (Mastodon/Misskey 등 수신 측이 tag 배열을 보고 직접 치환)
+export function renderMarkdownForAP(content: string): string {
+  return marked.parse(content) as string
+}

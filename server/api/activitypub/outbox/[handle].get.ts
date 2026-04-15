@@ -1,10 +1,10 @@
 import { db } from '../../../db'
 import { users, posts, customEmojis } from '../../../db/schema'
 import { and, eq, desc, isNull } from 'drizzle-orm'
+import { renderMarkdownForAP } from '../../../utils/markdown'
 
 export default defineEventHandler(async (event) => {
   const handle = getRouterParam(event, 'handle')!
-  const domain = process.env.INSTANCE_DOMAIN!
 
   const user = await db.query.users.findFirst({
     where: and(eq(users.handle, handle), eq(users.isLocal, true)),
@@ -24,14 +24,12 @@ export default defineEventHandler(async (event) => {
   // 본문에서 :shortcode: 패턴 추출 → AP Emoji tag 배열 생성
   function extractEmojiTags(content: string) {
     const matches = [...content.matchAll(/:([a-zA-Z0-9_]+):/g)]
-    return matches
-      .map(m => m[1])
-      .filter((sc, i, arr) => arr.indexOf(sc) === i && emojiMap[sc])
-      .map(sc => ({
-        type: 'Emoji',
-        name: `:${sc}:`,
-        icon: { type: 'Image', url: emojiMap[sc] },
-      }))
+    const shortcodes = [...new Set(matches.map(m => m[1]).filter((sc): sc is string => !!sc && sc in emojiMap))]
+    return shortcodes.map(sc => ({
+      type: 'Emoji',
+      name: `:${sc}:`,
+      icon: { type: 'Image', url: emojiMap[sc] },
+    }))
   }
 
   setHeader(event, 'Content-Type', 'application/activity+json')
@@ -58,7 +56,7 @@ export default defineEventHandler(async (event) => {
         object: {
           id:           post.apId,
           type:         'Note',
-          content:      post.contentHtml ?? post.content,
+          content:      renderMarkdownForAP(post.content),
           published:    post.createdAt,
           attributedTo: user.actorUrl,
           to:           ['https://www.w3.org/ns/activitystreams#Public'],

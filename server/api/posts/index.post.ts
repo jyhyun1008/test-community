@@ -4,7 +4,7 @@ import { posts, channels, media, follows, users, customEmojis } from '../../db/s
 import { requireAuth } from '../../utils/auth'
 import { eq, sql, inArray, isNull } from 'drizzle-orm'
 import { z } from 'zod'
-import { renderMarkdown } from '../../utils/markdown'
+import { renderMarkdown, renderMarkdownForAP } from '../../utils/markdown'
 
 const schema = z.object({
   title:      z.string().max(200).optional(),
@@ -120,7 +120,7 @@ const createActivity = {
   object: {
     id:           `https://${domain}/posts/${post.id}`,
     type:         'Note',
-    content:      post.contentHtml ?? post.content,
+    content:      renderMarkdownForAP(body.content),
     published:    post.createdAt,
     attributedTo: `https://${domain}/users/${user.handle}`,
     to:           noteTo,
